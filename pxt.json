@@ -1,0 +1,65 @@
+{
+    "name": "Blackheart (DEMO)",
+    "description": "This place... It fills me with dread.",
+    "dependencies": {
+        "device": "*",
+        "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.2.0",
+        "arcade-background-scroll": "github:microsoft/arcade-background-scroll#v0.1.2",
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0",
+        "arcade-overworld": "github:riknoll/arcade-overworld#v0.0.5",
+        "Extra Effects": "github:alexszeto/extra-effects#v3.1.0",
+        "sprite-fx": "github:kohanmathers/makecodespritefx#v1.3.0",
+        "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.1.0",
+        "Arcade Easing - Copy": "github:ChimbroDaPro/arcade-easing#v1.0.0",
+        "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1",
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
+        "pxt-button-combos": "github:jwunderl/pxt-button-combos#v0.0.24",
+        "browser-events": "*",
+        "arcade-fancy-text": "github:riknoll/arcade-fancy-text#v0.2.2",
+        "MediumBlock 5b (font)": "pub:75547-30778-60113-83471"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "assets.json",
+        "images.g.jres",
+        "images.g.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "branch": "stable4.0",
+        "tag": "v4.0.14",
+        "commits": "https://github.com/microsoft/pxt-arcade/commits/a33ec9537bc6c5fada2a3b02aac57a4bc9a10803",
+        "target": "4.0.14",
+        "pxt": "12.2.34",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "blocksprj",
+    "palette": [
+        "#000000",
+        "#FFFFFF",
+        "#EDEDED",
+        "#DBDBDB",
+        "#C8C8C8",
+        "#B6B6B6",
+        "#A4A4A4",
+        "#929292",
+        "#808080",
+        "#6D6D6D",
+        "#5B5B5B",
+        "#494949",
+        "#373737",
+        "#242424",
+        "#121212",
+        "#000000"
+    ]
+}
