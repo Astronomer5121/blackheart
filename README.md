@@ -1,26 +1,9 @@
- 
+                                                             
+Blackheart! It's a game! That you can play if you want to! It has a LOT of caves!
 
+## CONTROLS
 
-> Open this page at [https://astronomer5121.github.io/blackheart/](https://astronomer5121.github.io/blackheart/)
-
-## Use as Extension
-
-This repository can be added as an **extension** in MakeCode.
-
-* open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/astronomer5121/blackheart** and import
-
-## Edit this project
-
-To edit this repository in MakeCode.
-
-* open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/astronomer5121/blackheart** and click import
-
-#### Metadata (used for search, rendering)
-
-* for PXT/arcade
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+W: Jump
+ASD: Movement
+Space: Attack
+Enter: Special (Currently healing)
