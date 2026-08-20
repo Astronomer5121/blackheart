@@ -1811,7 +1811,21 @@ function NPCs () {
         Save.bottom = value5.bottom
     }
     for (let value2 of tiles.getTilesByType(assets.tile`myTile63`)) {
-        Boss1 = sprites.create(assets.image`myImage7`, SpriteKind.Boss)
+        Boss1 = sprites.create(img`
+            . . . . . . . . . . . . . . 
+            1 1 1 1 . . . . . . . . . . 
+            . 2 2 2 1 1 . . . . . . . . 
+            . . 1 8 5 8 5 8 . . 1 1 1 1 
+            . 5 8 5 5 5 8 5 5 1 2 2 2 . 
+            5 8 5 8 5 8 5 8 1 2 1 1 5 . 
+            8 5 5 5 8 5 5 5 8 5 5 5 8 5 
+            . e e e e e 5 8 5 8 5 8 5 8 
+            . 1 d d d d d e e 5 8 5 5 . 
+            . d 1 d d 1 d d d d d d . . 
+            . . d d 1 d d d d d d . . . 
+            . . . d d d d d . . . . . . 
+            . . . . . . . . . . . . . . 
+            `, SpriteKind.Boss)
         tiles.placeOnTile(Boss1, value2)
         tiles.setTileAt(value2, assets.tile`transparency8`)
         sprites.setDataNumber(Boss1, "EnemyAI", 2.5)
