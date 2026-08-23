@@ -114,6 +114,23 @@ function DrawText (Text: string, Speaker: string) {
     mySprite.fx = TempVariable[2]
     mySprite.vx = TempVariable[3]
 }
+scene.onOverlapTile(SpriteKind.Projectile, assets.tile`myTile9`, function (sprite, location) {
+    if (attacking == 1) {
+        if (controller.down.isPressed()) {
+            mySprite.vy = -115
+            music.play(music.createSoundEffect(
+            WaveShape.Noise,
+            0,
+            1225,
+            255,
+            0,
+            400,
+            SoundExpressionEffect.Vibrato,
+            InterpolationCurve.Curve
+            ), music.PlaybackMode.UntilDone)
+        }
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile77`, function (sprite, location) {
     LoadOverworld(list[0], list[1], list[2], list[3], list[4])
 })
@@ -1124,14 +1141,16 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                     1 1 1 1 1 1 1 
                     1 1 1 1 1 1 1 
                     `)
-                SwordBox.top = mySprite.y + 14
-                SwordBox.left = mySprite.left + 4
                 animation.runImageAnimation(
                 SwordAnim,
                 assets.animation`myAnim8`,
                 50,
                 false
                 )
+                SwordBox.top = mySprite.bottom
+                SwordAnim.top = mySprite.bottom
+                SwordBox.x = mySprite.x
+                SwordAnim.x = mySprite.x
             }
             music.play(SwordSounds._pickRandom(), music.PlaybackMode.UntilDone)
             pause(100)
@@ -1184,7 +1203,8 @@ overworld.onMapLoaded(function (overworldColumn, overworldRow, map) {
     tiles.setCurrentTilemap(tileUtil.cloneMap(map))
     picture = image.create(8, 8)
     picture.fill(11)
-    tileUtil.coverAllTiles(assets.tile`myTile30`, assets.tile`transparency8`)
+    tileUtil.coverAllTiles(assets.tile`myTile30`, assets.tile`myTile89`)
+    tileUtil.coverAllTiles(assets.tile`myTile31`, assets.tile`myTile89`)
     if (OverworldLocation[0] == 4 && Map == 0) {
         scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
             9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -1833,7 +1853,7 @@ function createPlayer () {
     mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
     CanControl = true
     PlayerAnims(mySprite)
-    mySprite.fx = 300
+    mySprite.fx = 325
     mySprite.ay = 500
     mySprite.vy = 150
     scene.cameraFollowSprite(mySprite)
@@ -2019,8 +2039,8 @@ function StartGame () {
         Soul = 0
         mySprite = sprites.create(assets.image`myImage`, SpriteKind.Player)
         PlayerAnims(mySprite)
-        mySprite.fx = 300
         tiles.placeOnTile(mySprite, tiles.getTileLocation(9.5, 1))
+        mySprite.fx = 325
         scroller.setLayerImage(scroller.BackgroundLayer.Layer1, img`
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
@@ -2502,6 +2522,9 @@ function LoadOverworld (ID: number, Xpos: number, Ypos: number, X: number, Y: nu
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (attacking == 1) {
+        if (controller.down.isPressed()) {
+            mySprite.vy = -115
+        }
         if (sprites.readDataNumber(otherSprite, "EnemyHP") - 1 == 0) {
             sprites.destroy(otherSprite)
             extraEffects.createSpreadEffectOnAnchor(otherSprite, extraEffects.createSingleColorSpreadEffectData(15, ExtraEffectPresetShape.Explosion), 100)
@@ -2510,6 +2533,14 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
             sprites.setDataNumber(otherSprite, "EnemyHP", 1)
             SwordBox.setKind(SpriteKind.Temp2)
             extraEffects.createSpreadEffectOnAnchor(otherSprite, extraEffects.createSingleColorSpreadEffectData(15, ExtraEffectPresetShape.Explosion), 100)
+            otherSprite.vy = -25
+            otherSprite.ay = 500
+            if (facing == 0) {
+                otherSprite.vx = -100
+            }
+            if (facing == 1) {
+                otherSprite.vx = 100
+            }
         }
     }
 })
@@ -2661,7 +2692,6 @@ let SwordAnim: Sprite = null
 let facing = 0
 let SwordBox: Sprite = null
 let Swordcooldown = 0
-let attacking = 0
 let mySprite20260528T233448486Z: Sprite = null
 let mySprite3: Sprite = null
 let mySprite2: Sprite = null
@@ -2669,6 +2699,7 @@ let Menu = 0
 let Ui1: Sprite = null
 let Image2: Image = null
 let list: number[] = []
+let attacking = 0
 let TextboxSprite: Sprite = null
 let myTextSprite2: fancyText.TextSprite = null
 let myTextSprite: fancyText.TextSprite = null
@@ -2745,20 +2776,6 @@ game.onUpdate(function () {
 })
 game.onUpdate(function () {
     if (Menu == 1) {
-        for (let value62 of sprites.allOfKind(SpriteKind.Savepoint)) {
-            if (spriteutils.distanceBetween(mySprite, value62) < 24) {
-                value62.sayText("A", 10, false)
-                if (controller.A.isPressed()) {
-                    Save_Game()
-                    value62.setKind(SpriteKind.Temp)
-                    value62.sayText("Saved!", 2000, false)
-                }
-            }
-        }
-    }
-})
-game.onUpdate(function () {
-    if (Menu == 1) {
         Array2 = sprites.allOfKind(SpriteKind.Item)
         for (let value222 of sprites.allOfKind(SpriteKind.Enemy)) {
             Array2.push(value222)
@@ -2783,18 +2800,13 @@ game.onUpdate(function () {
 })
 game.onUpdate(function () {
     if (Menu == 1) {
-        if (CanControl) {
-            if (!(TextWriting)) {
-                if (controller.left.isPressed()) {
-                    mySprite.vx += -10
-                } else if (controller.right.isPressed()) {
-                    mySprite.vx += 10
-                }
-                if (mySprite.vx > 125) {
-                    mySprite.vx = 125
-                }
-                if (mySprite.vx < -125) {
-                    mySprite.vx = -125
+        for (let value62 of sprites.allOfKind(SpriteKind.Savepoint)) {
+            if (spriteutils.distanceBetween(mySprite, value62) < 24) {
+                value62.sayText("A", 10, false)
+                if (controller.A.isPressed()) {
+                    Save_Game()
+                    value62.setKind(SpriteKind.Temp)
+                    value62.sayText("Saved!", 2000, false)
                 }
             }
         }
@@ -2805,46 +2817,15 @@ game.onUpdate(function () {
         if (CanControl) {
             if (!(TextWriting)) {
                 if (controller.left.isPressed()) {
-                    facing = 0
+                    mySprite.vx += -12.5
                 } else if (controller.right.isPressed()) {
-                    facing = 1
-                } else if (controller.down.isPressed()) {
-                	
-                } else {
-                	
+                    mySprite.vx += 12.5
                 }
-                SwordBox.setImage(assets.image`hurtbox`)
-                SwordBox.y = mySprite.y
-                SwordAnim.y = mySprite.y
-                if (facing == 0) {
-                    SwordBox.right = mySprite.left
-                    SwordAnim.right = mySprite.left
-                } else if (facing == 1) {
-                    SwordBox.left = mySprite.right
-                    SwordAnim.left = mySprite.right
-                } else if (facing == 2) {
-                    if (true) {
-                        SwordBox.setImage(img`
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            1 1 1 1 1 1 1 
-                            `)
-                        SwordBox.top = mySprite.bottom
-                        SwordBox.x = mySprite.x
-                    }
-                } else {
-                	
+                if (mySprite.vx > 125) {
+                    mySprite.vx = 125
+                }
+                if (mySprite.vx < -125) {
+                    mySprite.vx = -125
                 }
             }
         }
@@ -2891,41 +2872,60 @@ game.onUpdate(function () {
         }
     }
 })
+game.onUpdate(function () {
+    if (Menu == 1) {
+        if (CanControl) {
+            if (!(TextWriting)) {
+                if (controller.down.isPressed()) {
+                    facing = 2
+                } else if (controller.left.isPressed()) {
+                    facing = 0
+                } else if (controller.right.isPressed()) {
+                    facing = 1
+                }
+                SwordBox.setImage(assets.image`hurtbox`)
+                SwordBox.y = mySprite.y
+                SwordAnim.y = mySprite.y
+                if (facing == 0) {
+                    SwordBox.right = mySprite.left
+                    SwordAnim.right = mySprite.left
+                } else if (facing == 1) {
+                    SwordBox.left = mySprite.right
+                    SwordAnim.left = mySprite.right
+                } else if (facing == 2) {
+                    if (true) {
+                        SwordBox.setImage(img`
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            1 1 1 1 1 1 1 
+                            `)
+                        SwordBox.top = mySprite.bottom
+                        SwordAnim.top = mySprite.bottom
+                        SwordBox.x = mySprite.x
+                        SwordAnim.x = mySprite.x
+                    }
+                } else {
+                	
+                }
+            }
+        }
+    }
+})
 game.onUpdateInterval(2000, function () {
     HeartAnimationIndex += 1
     if (HeartAnimationIndex == 4) {
         HeartAnimationIndex = 0
-    }
-})
-game.onUpdate(function () {
-    for (let value8 of sprites.allOfKind(SpriteKind.Boss)) {
-        if (sprites.readDataNumber(value8, "EnemyAI") == 2.5) {
-            if (value8.isHittingTile(CollisionDirection.Left)) {
-                animation.runImageAnimation(
-                Boss1,
-                assets.animation`BflyguyR`,
-                200,
-                true
-                )
-                value8.x += 1
-                value8.vx = 25
-            } else if (value8.isHittingTile(CollisionDirection.Right)) {
-                value8.x += -1
-                animation.runImageAnimation(
-                Boss1,
-                assets.animation`BflyguyL`,
-                200,
-                true
-                )
-                value8.vx = -25
-            } else if (value8.isHittingTile(CollisionDirection.Top)) {
-                value8.y += 1
-                value8.vy = 25
-            } else if (value8.isHittingTile(CollisionDirection.Bottom)) {
-                value8.y += -1
-                value8.vy = -25
-            }
-        }
     }
 })
 game.onUpdate(function () {
@@ -2977,6 +2977,37 @@ game.onUpdate(function () {
             } else if (value7.isHittingTile(CollisionDirection.Bottom)) {
                 value7.y += -1
                 value7.vy = -25
+            }
+        }
+    }
+})
+game.onUpdate(function () {
+    for (let value8 of sprites.allOfKind(SpriteKind.Boss)) {
+        if (sprites.readDataNumber(value8, "EnemyAI") == 2.5) {
+            if (value8.isHittingTile(CollisionDirection.Left)) {
+                animation.runImageAnimation(
+                Boss1,
+                assets.animation`BflyguyR`,
+                200,
+                true
+                )
+                value8.x += 1
+                value8.vx = 25
+            } else if (value8.isHittingTile(CollisionDirection.Right)) {
+                value8.x += -1
+                animation.runImageAnimation(
+                Boss1,
+                assets.animation`BflyguyL`,
+                200,
+                true
+                )
+                value8.vx = -25
+            } else if (value8.isHittingTile(CollisionDirection.Top)) {
+                value8.y += 1
+                value8.vy = 25
+            } else if (value8.isHittingTile(CollisionDirection.Bottom)) {
+                value8.y += -1
+                value8.vy = -25
             }
         }
     }
